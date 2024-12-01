@@ -1,58 +1,70 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-import csv
+from selenium.webdriver.common.keys import Keys
 import time
+import csv
 
-# Caminho para o ChromeDriver (certifique-se de colocar o caminho correto)
-driver = webdriver.Chrome(executable_path='./chromedriver/chromedriver')  # Altere para o caminho correto do seu chromedriver
+# Iniciar o WebDriver (assumindo que o ChromeDriver está no PATH)
+driver = webdriver.Chrome()
 
-# URL do site de jurisprudência (substitua com o site real)
-url = 'https://www.exemplo.com/jurisprudencia'
+# Acesse o site
+url = 'https://processo.stj.jus.br/SCON/pesquisar.jsp?preConsultaPP=&pesquisaAmigavel=+%3Cb%3Eprocesso%3C%2Fb%3E&acao=pesquisar&novaConsulta=true&i=1&b=ACOR&livre=processo&filtroPorOrgao=&filtroPorMinistro=&filtroPorNota=&data=&operador=e&thesaurus=JURIDICO&p=true&tp=T&processo=&classe=&uf=&relator=&dtpb=&dtpb1=&dtpb2=&dtde=&dtde1=&dtde2=&orgao=&ementa=&nota=&ref='
 driver.get(url)
 
-# Aguarde o carregamento dinâmico da página
+# Aguardar o carregamento da página
 driver.implicitly_wait(10)
 
-# Função para extrair jurisprudência
-def coletar_jurisprudencia():
-    jurisprudencias = driver.find_elements(By.CLASS_NAME, 'jurisprudencia')
-    data = []
+# Função para coletar os dados
+def coletar_dados():
+    # Listar os acórdãos exibidos na página
+    acordaos = driver.find_elements(By.CLASS_NAME, 'item-jurisprudencia')
+
+    dados = []
     
-    for jurisprudencia in jurisprudencias:
+    for ac in acordaos:
         try:
-            titulo = jurisprudencia.find_element(By.TAG_NAME, 'h2').text
-            resumo = jurisprudencia.find_element(By.TAG_NAME, 'p').text
-            data.append([titulo, resumo])
+            # Extrair informações relevantes: Processo, Relator, Data de Julgamento, Ementa
+            processo = ac.find_element(By.CLASS_NAME, 'numeroProcesso').text
+            relator = ac.find_element(By.CLASS_NAME, 'relator').text
+            data_julgamento = ac.find_element(By.CLASS_NAME, 'dataJulgamento').text
+            ementa = ac.find_element(By.CLASS_NAME, 'ementa').text
+            
+            dados.append([processo, relator, data_julgamento, ementa])
         except Exception as e:
             print(f"Erro ao coletar dados: {e}")
     
-    return data
+    return dados
 
-# Função para salvar os dados em um arquivo CSV
-def salvar_em_csv(data):
+# Função para salvar em CSV
+def salvar_em_csv(dados):
     with open('jurisprudencia.csv', mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
-        writer.writerow(['Título', 'Resumo'])  # Cabeçalho do CSV
-        writer.writerows(data)
+        writer.writerow(['Processo', 'Relator', 'Data de Julgamento', 'Ementa'])
+        writer.writerows(dados)
 
-# Navegação entre páginas, se necessário
-def navegar_entre_paginas():
-    while True:
-        print("Coletando dados da página atual...")
-        data = coletar_jurisprudencia()
-        salvar_em_csv(data)  # Salva os dados coletados até o momento
+# Coletar os dados da primeira página
+dados = coletar_dados()
+
+# Salvar os dados em um arquivo CSV
+salvar_em_csv(dados)
+
+# Caso haja múltiplas páginas, navegar para a próxima
+while True:
+    try:
+        # Encontrar e clicar no link da próxima página
+        next_page_button = driver.find_element(By.LINK_TEXT, 'Próxima')
+        next_page_button.click()
         
-        # Tenta clicar na próxima página
-        try:
-            next_page = driver.find_element(By.LINK_TEXT, 'Próxima')
-            next_page.click()
-            time.sleep(3)  # Aguarde um pouco antes de continuar
-        except Exception as e:
-            print("Última página alcançada ou erro na navegação.")
-            break
+        # Aguardar o carregamento da página
+        time.sleep(3)
+        
+        # Coletar dados da nova página
+        dados = coletar_dados()
+        salvar_em_csv(dados)
+    
+    except Exception as e:
+        print("Última página alcançada ou erro na navegação.")
+        break
 
-# Executando a coleta e navegação
-navegar_entre_paginas()
-
-# Encerrando o navegador
+# Fechar o navegador após o processo
 driver.quit()
