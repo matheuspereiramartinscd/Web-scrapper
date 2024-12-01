@@ -38,16 +38,16 @@ Este projeto utiliza o Selenium para realizar scraping da página de Contabilida
 ### Verifique o Arquivo de Saída
 Após a execução do script, os dados coletados serão salvos em um arquivo chamado `dados_formatados.txt`. O conteúdo do arquivo será estruturado da seguinte forma:
 
-```txt
-Dados extraídos da página de Wikipedia sobre Contabilidade:
-
-Conteúdo 1:
-Título: Contabilidade
-Introdução: A contabilidade é a ciência que estuda, analisa e controla o patrimônio de uma entidade.
-Links Internos: https://pt.wikipedia.org/wiki/Contabilidade, https://pt.wikipedia.org/wiki/Patrim%C3%B4nio, ...
-
-------------------------------------------------------
-```
+  ```txt
+  Dados extraídos da página de Wikipedia sobre Contabilidade:
+  
+  Conteúdo 1:
+  Título: Contabilidade
+  Introdução: A contabilidade é a ciência que estuda, analisa e controla o patrimônio de uma entidade.
+  Links Internos: https://pt.wikipedia.org/wiki/Contabilidade, https://pt.wikipedia.org/wiki/Patrim%C3%B4nio, ...
+  
+  ------------------------------------------------------
+  ```
 
 ## Considerações Finais
 Este projeto é uma implementação simples de Web Scraping usando o Selenium. Ele pode ser expandido para incluir mais funcionalidades, como extração de mais conteúdo ou salvar os dados em diferentes formatos (como CSV ou JSON). A página de Wikipedia usada como exemplo pode ser substituída por outras, caso necessário.
