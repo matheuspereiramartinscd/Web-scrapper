@@ -49,5 +49,3 @@ Após a execução do script, os dados coletados serão salvos em um arquivo cha
   ------------------------------------------------------
   ```
 
-## Considerações Finais
-Este projeto é uma implementação simples de Web Scraping usando o Selenium. Ele pode ser expandido para incluir mais funcionalidades, como extração de mais conteúdo ou salvar os dados em diferentes formatos (como CSV ou JSON). A página de Wikipedia usada como exemplo pode ser substituída por outras, caso necessário.
