@@ -31,9 +31,9 @@ Este projeto utiliza o Selenium para realizar scraping da página de Contabilida
 
 2. Execute o script:
   No terminal, execute o seguinte comando:
-  ```bash
-  python webscraper.py
-  ```
+    ```bash
+    python webscraper.py
+    ```
 
 ### Verifique o Arquivo de Saída
 Após a execução do script, os dados coletados serão salvos em um arquivo chamado `dados_formatados.txt`. O conteúdo do arquivo será estruturado da seguinte forma:
